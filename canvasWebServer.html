@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>WebServer</title>
+	<style type="text/css">
+		#canvas{
+			border: 3px solid blue;
+		}
+	</style>
+</head>
+<body>
+	<h1>Відображення графіку через веб-сервер</h1>
+	<p>Введіть масштаб <input type="text" id="scale"></p>
+	<canvas width="400" height="200" id="canvas"></canvas>
+	<script type="text/javascript">
+		let canvas = document.getElementById("canvas");
+		let ctx = canvas.getContext('2d');
+		let x = 0;
+		let timer;
+		let s = 10;
+		//let scale = Number(document.getElementById('scale').value);
+
+		drawSin();
+
+		function drawSin() {
+			let points = [ 0, 1.223707, 2.304118, 3.138986, 3.652057, 3.8, 3.575973, 3.009543, 2.16305, 1.124822, 4.41E-16, -1.1001, -2.069, -2.81538, -3.27163, -3.4, -3.19555, -2.68594, -1.92794, -1.00122, -7.8E-16, 0.976494, 1.83389, 2.491772, 2.891212, 3, 2.815127, 2.36233, 1.692822, 0.877608, 1.03E-15, -0.85289, -1.59878, -2.16817, -2.51079, -2.6, -2.4347, -2.03872, -1.45771, -0.754, -1.2E-15, 0.72928, 1.363662, 1.844559, 2.130367, 2.2, 2.054282, 1.715116, 1.222593, 0.630395, 1.23E-15, -0.60567, -1.12855, -1.52095, -1.74994, -1.8, -1.67386, -1.39151, -0.98748, -0.50679, 2.16E-14, 0.482067, 0.893434, 1.197345, 1.369521, 1.4, 1.293437, 1.067902, 0.752365, 0.383181, -3.7E-14, -0.35846, -0.65832, -0.87374, -0.9891, -1, -0.91301, -0.7443, -0.51725, -0.25957, 3.9E-14, 0.234853, 0.423205, 0.550132, 0.608676, 0.6, 0.532592, 0.420689, 0.282137, 0.135967, -2.7E-14, -0.11125, -0.18809, -0.22652, -0.22825, -0.2, -0.15217, -0.09708, -0.04702, -0.01236 ];
+
+			console.log("s = " + s);
+			ctx.moveTo ( 5/*відступ по Ох. При збільшенні коеф => заломлення початку графіку*/, 100/*зсув по Оу*/+s/*масштаб по Оу*/*( points[0] ) );
+			ctx.beginPath();
+			for ( let i = 1; i < points.length; i++ ){
+				
+				ctx.lineTo ( i*canvas.width/100/*розтягування по Ох. canvas.width/100 - припасувати до ширини canvas*/+3/*розміщення по Ох*/, 100/*зсув по Оу*/+s/*масштаб по Оу*/*(points[i]*-1) );
+			} // for i
+
+			ctx.stroke();
+			ctx.closePath();
+
+			timer = setTimeout( drawSin, 1 ); // кожні 100 мс відбуватиметься малювання графіка sin
+		} // drawSin
+
+
+		function scaleInc (){
+			ctx.clearRect( 0, 0, canvas.width, canvas.height );
+			let scale = Number(document.getElementById('scale').value);
+			let sNew = s + scale;
+			s = sNew;
+			console.log("scaleInc = " + s);
+			return s;
+		} // scaleInc
+
+		function scaleDec (){
+			ctx.clearRect( 0, 0, canvas.width, canvas.height );
+			let scale = Number(document.getElementById('scale').value);
+			let sNew = s - scale;
+			s = sNew;
+			console.log("scaleDec = " + s);
+			return s;
+		} // scaleDec
+	</script>
+	<br><br><br>
+	<button onclick="scaleInc()">+</button>
+	<button onclick="scaleDec()">-</button>
+</body>
+</html>
